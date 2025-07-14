@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTDC</title>
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://ar-hosting.pages.dev/1752471737156.jpg') center/cover no-repeat fixed;
+      color: white;
+      overflow-x: hidden;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 15px;
+    }
+    nav a {
+      color: cyan;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    h1 {
+      text-align: center;
+      margin: 30px 0 10px;
+      font-size: 3em;
+    }
+    .description {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+      color: #ccc;
+    }
+    .welcome-message {
+      text-align: center;
+      font-size: 1em;
+      margin-bottom: 20px;
+      color: lightgreen;
+    }
+    .card {
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    }
+    .btn, .copy-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      background: cyan;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    #char {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    #login-page, #register-page {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #login-box, #register-box {
+      background: rgba(255,255,255,0.05);
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      width: 90%;
+      max-width: 400px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 25px;
+      background: cyan;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #loading {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      color: cyan;
+      font-size: 1.5em;
+    }
+    #snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+    #discord-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.85);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: 10000;
+      color: white;
+      text-align: center;
+      max-width: 300px;
+    }
+    #discord-popup button {
+      background: #5865F2;
+      color: white;
+      margin-top: 10px;
+    }
+    #intro-page {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #intro-page button {
+    background: cyan;
+    color: black;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    }
+      #intro-page button:hover {
+    transform: scale(1.05);
+    background: #00ffff;
+    }
+    @media (max-width: 600px) {
+    #intro-page {
+    flex-direction: column;
+    padding: 20px;
+    text-align: center;
+    }
+    #intro-page h1 {
+    font-size: 1.5em;
+    }
+    #intro-page p {
+    font-size: 1em;
+    }
+    #intro-page button {
+    width: 100%;
+    padding: 14px;
+    }
+  </style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+<div id="discord-popup">
+  <p>Gabung ke Discord kami untuk info dan giveaway terbaru!</p>
+  <button onclick="window.open('https://discord.gg/eKtHFcjTtU', '_blank')">Join Discord</button>
+</div>
+<div id="intro-page" style="display:flex;">
+  <h1 style="color:white;font-size:2em;text-align:center;margin-bottom:20px;">Selamat Datang di GTDC</h1>
+  <p style="color:white;text-align:center;padding:0 20px;margin-bottom:20px;">
+    🔹 Untuk mulai bermain, kamu harus membaca petunjuk berikut:<br><br>
+    - Download & salin file host yang dibutuhkan<br>
+    - Gunakan PTunnel sesuai perangkat kamu (Android/iOS)<br>
+    - Gabung Discord untuk info update event<br>
+    - Setelah paham, klik tombol di bawah
+  </p>
+  <button onclick="hideIntro()" style="background:cyan;color:black;padding:12px 24px;border:none;border-radius:8px;font-weight:bold;">Saya Mengerti & Lanjutkan</button>
+</div>
+<div id="loading">Loading...</div>
+<div id="login-page" style="display:none;">
+  <div id="login-box">
+    <h2>GTDC Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Masuk</button>
+    <p style="margin-top:10px">Belum punya akun? <a href="#" onclick="showRegister()" style="color:cyan">Daftar</a></p>
+  </div>
+</div>
+<div id="register-page" style="display:none;">
+  <div id="register-box">
+    <h2>Registrasi Akun</h2>
+    <input type="text" placeholder="Username">
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button onclick="registerFake()">Daftar</button>
+    <p style="margin-top:10px">Sudah punya akun? <a href="#" onclick="hideRegister()" style="color:cyan">Login</a></p>
+  </div>
+</div>
+<div id="main-page" style="display:none;">
+  <nav>
+    <a href="#">Beranda</a>
+    <a href="#">Event</a>
+    <a href="#">Statistik</a>
+    <a href="#">Donasi</a>
+  </nav>
+  <h1>GTDC</h1>
+  <p class="description">Growtopia Private Server keren, beda dari yang lain, event harian, custom item, dan komunitas aktif!</p>
+  <p class="welcome-message" id="greeting"></p>
+  <div class="card">
+    <h2>📈 Statistik Server</h2>
+    <p>👥 Pemain Online: <span id="playerCount">1</span></p>
+    <p>🗂️ Custom Items: 781</p>
+  </div>
+  <div class="card">
+    <h2>🧩 Tampilan Server:</h2>
+    <p>- Spawn World modern & rapi<br><br>- Event World aktif setiap minggu<br>- Display custom item / item rare<br>- World para pemain (Parkour, Shop, Roleplay, dsb)</p>
+  </div>
+  <div class="card">
+    <h2>🌍 World Showcase</h2>
+    <img src="https://ar-hosting.pages.dev/1752473409315.jpg" alt="World" style="width:100%; border-radius:10px">
+  </div>
+  <div class="card">
+    <h2>🌐 Semua Host & VHost GTDC</h2>
+    <a class="btn" href="https://www.mediafire.com/file/an2k7k7paeos4rf/GTDC.txt/file" target="_blank">Download VHOST</a>
+    <a class="btn" href="HTTPS://GROWSOFT.CC/ANDROID.TXT" target="_blank">COPY PTUNNEL ANDROID</a>
+    <a class="btn" href="HTTPS://GROWSOFT.CC/IOS.TXT" target="_blank">COPY PTUNNEL IOS</a>
+    <button class="copy-btn" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">COPY MANUAL HOST WINDOWS</button>
+    <button class="copy-btn" onclick="copyText(`[General]\nbypass-system = true\n[Rule]\nFINAL,DIRECT\n[Host]\ngrowtopia1.com = 91.134.85.13\ngrowtopia2.com = 91.134.85.13\nwww.growtopia1.com = 91.134.85.13\nwww.growtopia2.com = 91.134.85.13`)">COPY HOST IOS</button>
+    <a class="btn" href="https://wa.me/6287733150588" target="_blank">Chat WA Owner</a>
+    <a class="btn" href="https://discord.gg/eKtHFcjTtU" target="_blank">Join Discord</a>
+  </div>
+  <div class="card">
+    <h2>Features GTDC</h2>
+    <p>📌 Tentang Server:<br><br>Server Growtopia Private full fitur buatan lokal! Stabil, ringan, cocok buat grinding, koleksi, sosial & santai. Aktif 24/7 dan bebas lag!<br><br>⚙️ Fitur Unggulan:<br>- Anti Lag! No auto crash!<br>- Item Mod & Custom Item<br>- Daily Reward & Login Bonus<br>- World Lock, Diamond Lock, BGL Aktif<br>- Sistem Box Reward & Event Harian<br>- Parkour, Puzzle, & World Challenge<br>- Anti Cheat Aktif<br>- Admin Fast Respon & Komunitas Aktif<br><br>🌐 Info Server:<br>IP: 91.134.85.13<br>  Versi: lastest<br><br>👥 Komunitas:<br>Discord: https://discord.gg/eKtHFcjTtU<br>WhatsApp: wa.me/6287733150588<br><br>📸 Screenshot dan update event? Cek di Discord!<br>🔍 Cari Partner?<br>Kami cari partner buat bantu urus komunitas & promosi. Gw urus coding/servernya — lu bantu komunitas & ide event.  
+Minat? DM aja! </p>
+  </div>
+</div>
+<img src="https://ar-hosting.pages.dev/1752469199214.png" id="char">
+<audio autoplay loop id="bgm">
+  <source src="https://files.catbox.moe/rj25l5.mp3" type="audio/mp3">
+</audio>
+<script>
+function login() {
+  document.getElementById("login-page").style.display = "none";
+  document.getElementById("main-page").style.display = "block";
+  document.getElementById("register-page").style.display = "none";
+  document.getElementById("bgm").play();
+}
+function showRegister() {
+  document.getElementById("login-page").style.display = "none";
+  document.getElementById("register-page").style.display = "flex";
+}
+function hideRegister() {
+  document.getElementById("register-page").style.display = "none";
+  document.getElementById("login-page").style.display = "flex";
+}
+function registerFake() {
+  document.getElementById("loading").style.display = "flex";
+  setTimeout(() => {
+    document.getElementById("loading").style.display = "none";
+    alert("✅ Pendaftaran berhasil. Silakan login!");
+    hideRegister();
+  }, 2000);
+}
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert("✅ Teks berhasil disalin!");
+}
+const greetings = [
+  "Selamat datang kembali, Growtopian!",
+  "Event baru sudah siap dimulai!",
+  "Ayo build dunia impianmu!",
+  "Jangan lupa cek donasi VIP~",
+  "Main bareng teman makin seru!"
+];
+document.getElementById("greeting").innerText = greetings[Math.floor(Math.random() * greetings.length)];
+const snowCanvas = document.getElementById('snow');
+const ctx = snowCanvas.getContext('2d');
+let snowflakes = [];
+function resize() {
+  snowCanvas.width = window.innerWidth;
+  snowCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+function createSnowflake() {
+  return {
+    x: Math.random() * snowCanvas.width,
+    y: Math.random() * snowCanvas.height,
+    radius: Math.random() * 4 + 1,
+    speed: Math.random() * 1 + 0.5
+  };
+}
+function hideIntro() {
+  document.getElementById("intro-page").style.display = "none";
+  document.getElementById("login-page").style.display = "flex";
+  document.getElementById("main-page").style.display = "none";
+  document.getElementById("register-page").style.display = "none";
+}
+
+  window.onload = function() {
+  document.getElementById("login-page").style.display = "none";
+  document.getElementById("main-page").style.display = "none";
+  document.getElementById("register-page").style.display = "none";
+}
+function updateSnow() {
+  ctx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
+  snowflakes.forEach((f, i) => {
+    f.y += f.speed;
+    if (f.y > snowCanvas.height) snowflakes[i] = createSnowflake();
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+  });
+  requestAnimationFrame(updateSnow);
+}
+for (let i = 0; i < 100; i++) snowflakes.push(createSnowflake());
+updateSnow();
+function updatePlayerCount() {
+  let el = document.getElementById("playerCount");
+  let now = parseInt(el.innerText);
+  let next = now + (Math.random() < 0.5 ? -1 : 1);
+  if (next < 1) next = 1;
+  el.innerText = next;
+}
+setInterval(updatePlayerCount, 5000);
+</script>
+</body>
+</html>
